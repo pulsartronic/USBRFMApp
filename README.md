@@ -8,14 +8,14 @@ An open source project is a forever Work In Progress. Feel free to be constructi
 
 Default configuration is in:
 ```sh
-Defaults.h
+ArduinoIDE/USBRFMApp/Defaults.h
 ```
 You should change it before uploading it to your board, based on your hardware, though you can later change it through the web interface.  
 Values are in hexadecimal, i bet you can handle them.  
 The data structure is a compact object/array/binary model, i should write documentation for it and i will, the module where it is handled is called CDS,
 which stands for Compact Data Structure.
 ```sh
-libraries/CDS
+ArduinoIDE/USBRFMApp/libraries/CDS
 ```
 The main goal is to work with a balance between
 1) binary data
