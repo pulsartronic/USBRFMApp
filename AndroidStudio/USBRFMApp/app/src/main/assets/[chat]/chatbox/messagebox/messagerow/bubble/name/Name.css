@@ -1,0 +1,16 @@
+div.Bubble div.Name {
+	display: flex;
+	font-weight: bold;
+	margin: 0.25em 0;
+	font-size: 80%;
+    align-items: baseline;
+}
+
+div.Bubble div.Name div.Label {
+	margin-left: 1em;
+}
+
+div.Bubble div.Name div.InputRow {
+	width: initial;
+	margin: 0;
+}

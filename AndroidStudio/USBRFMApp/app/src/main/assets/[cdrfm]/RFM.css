@@ -1,0 +1,29 @@
+div.RFM {
+	width: 100%;
+}
+
+div.RFM div.InputRow div.Name {
+	width: 38%;
+}
+
+div.RFM div.InputRow div.Input {
+	width: calc(60% - 1.2em);
+}
+
+div.Boundary input,
+div.Boundary {
+	font-style: italic;
+
+}
+
+div.Boundary div.Name {
+	font-style: italic;
+}
+
+div.Boundary div.Input input.Large {
+	color: #555;
+}
+
+div.Pins div.InputRow {
+	width: 50%;
+}

@@ -1,0 +1,19 @@
+div.Console {
+	display: flex;
+	flex-direction: column-reverse;
+	width: calc(100% - 1em);
+	margin: 0 0.5em;
+	height: 10em;
+	background-color: white;
+	box-shadow: 0 0 5px #888;
+	text-align: left;
+	font-family: monospace;
+	font-size: 85%;
+	overflow-y: auto;
+}
+
+div.Console div.Line {
+	width: 99%;
+	margin: 0.5%;
+}
+

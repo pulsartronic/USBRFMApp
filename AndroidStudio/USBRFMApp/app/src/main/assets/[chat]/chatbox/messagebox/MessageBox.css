@@ -1,0 +1,12 @@
+div.MessageBox {
+	position: relative;
+	display: flex;
+	flex-direction: column-reverse;
+	overflow-y: auto;
+	width: calc(100% - 1em);
+	margin: 0.5em;
+	box-shadow: 0 0 4px #868686;
+	border-radius: 3px;
+	font-family: monospace;
+	background-color: rgb(240, 240, 240);
+}

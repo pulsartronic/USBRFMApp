@@ -1,0 +1,16 @@
+div.USBRFMApp {
+	width: 100%;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+
+div.USBRFMApp div.Vapp {
+	width: 100%;
+}
+
+div.USBRFMApp div.Vapp div.Nodes {
+	width: 100%;
+}
+

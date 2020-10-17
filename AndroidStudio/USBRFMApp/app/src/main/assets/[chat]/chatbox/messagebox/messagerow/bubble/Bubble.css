@@ -1,0 +1,25 @@
+div.Bubble {
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+    flex-direction: column;
+	margin: 0.35em 0.25em 0.25em;
+	padding: 0.35em 0.7em;
+	border-radius: 5px;
+	width: fit-content;
+	background-color: rgb(255, 255, 250);
+	color: #222;
+
+	border-top: 1px solid #EEE;
+	border-right: 1px solid #EEE;
+	border-bottom: 1px solid #CCC;
+	border-left: 1px solid #CCC;
+}
+
+div.NamedBubble {
+	margin-top: 0;
+}
+
+div.OwnBubble {
+	background-color: #e6ffd2;
+}

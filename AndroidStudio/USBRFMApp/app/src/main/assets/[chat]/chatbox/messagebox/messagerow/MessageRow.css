@@ -1,0 +1,7 @@
+div.MessageRow {
+	position: relative;
+	display: flex;
+	width: 100%;
+}
+
+
