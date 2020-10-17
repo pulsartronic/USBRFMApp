@@ -8,7 +8,7 @@ An open source project is a forever Work In Progress. Feel free to be constructi
 
 Default configuration is in:
 ```sh
-ArduinoIDE/USBRFMApp/Defaults.h
+ArduinoIDE/USBRFMApp/USBRFMApp/Defaults.h
 ```
 You should change it before uploading it to your board, based on your hardware, though you can later change it through the web interface.  
 Values are in hexadecimal, i bet you can handle them.  
