@@ -54,8 +54,8 @@ void SerialPort::state(CDS::DataBuffer* params, CDS::DataBuffer* response) {
 }
 
 void SerialPort::from(CDS::DataBuffer* params) {
-	//CDS::Iterator storage = this->storage();
-	//CDS::Element::fill(storage, params);
+	CDS::Iterator storage = this->storage();
+	CDS::Element::fill(storage, params);
 }
 
 size_t SerialPort::write(uint8_t b) {

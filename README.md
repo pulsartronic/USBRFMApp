@@ -1,4 +1,4 @@
-# USBRFMApp
+# USB RFM App
 smartphone LoRa device connection - Android - USB - Arduino - LoRa
 
 Instructions on how to make it work can be found here https://www.hackster.io/pulsartronic/lorawan-gateway-esp8266-rfm95-arduino-4914a8
