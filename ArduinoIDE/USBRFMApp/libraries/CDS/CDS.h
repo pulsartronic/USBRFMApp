@@ -31,6 +31,7 @@ namespace CDS {
 		virtual size_t available();
 		virtual DataBuffer* subBuffer(size_t size);
 		virtual void reset();
+		virtual void skip(size_t count);
 		virtual size_t readSize(uint8_t initial);
 	};
 
@@ -140,7 +141,7 @@ namespace CDS {
 		static bool isNumber(DataBuffer* element);
 		static size_t calculateLength(DataBuffer* element);
 		static void serialize(DataBuffer* element, CDS::Iterator* iterator);
-		static void merge(CDS::Iterator storage, CDS::DataBuffer* element);
+		static void fill(CDS::Iterator storage, CDS::DataBuffer* element);
 		//static String stringify(DataBuffer* element);
 	};
 	
@@ -173,6 +174,8 @@ namespace CDS {
 	class Number {
 		public:
 		static void setChars(DataBuffer* object, const uint8_t* name);
+		static void setData(DataBuffer* number, DataBuffer* data);
+		
 		static bool cmp(DataBuffer* number, const uint8_t* name);
 		static bool cmp(DataBuffer* a, DataBuffer* b);
 		static void serialize(DataBuffer* element, CDS::Iterator* iterator);

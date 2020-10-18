@@ -318,19 +318,19 @@ class CDObject extends CDElement {
 		this.keys[name] = new CDKeyValue(name, element);
 	}
 
-	object(name) {
+	newObject(name) {
 		let newObject = new CDObject();
 		this.set(name, newObject);
 		return newObject;
 	}
 	
-	array(name) {
+	newArray(name) {
 		let newArray = new CDArray();
 		this.set(name, newArray);
 		return newArray;
 	}
 	
-	number(name) {
+	newNumber(name) {
 		let newNumber = new CDNumber();
 		this.set(name, newNumber);
 		return newNumber;

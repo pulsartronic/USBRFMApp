@@ -1,4 +1,4 @@
-package com.pulsartronic.webviewusb;
+package com.pulsartronic.usbrfmapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,7 +18,6 @@ import android.webkit.WebView;
 
 import com.felhr.usbserial.UsbSerialDevice;
 import com.felhr.usbserial.UsbSerialInterface;
-import com.pulsartronic.lorausb.R;
 
 import android.util.Base64;
 
@@ -27,8 +26,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-// credits:
-// https://github.com/felHR85/UsbSerial
 public class USBRFMApp extends AppCompatActivity {
     public final String ACTION_USB_PERMISSION = "com.pulsartronic.webviewusb.USB_PERMISSION";
     static String defaultConfiguration = "{\"baudrate\":9600,\"config\":3}";

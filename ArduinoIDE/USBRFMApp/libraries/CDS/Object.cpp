@@ -92,7 +92,7 @@ CDS::Iterator CDS::Object::taketo(CDS::Iterator storage, CDS::DataBuffer* key) {
 	for (size_t i = (size_t) 0; i < size; i++) {
 		CDS::DataBuffer* storedKey = CDS::Element::nextElement(&storage);
 		bool equals = CDS::Number::cmp(key, storedKey);
-		delete key;
+		delete storedKey;
 		if (equals) {
 			break;
 		} else {

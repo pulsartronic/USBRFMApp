@@ -16,7 +16,7 @@ void USBRFMApp::setup() {
 	RootNode::setup();
 	
 	size_t eepromSize = sizeof(DEFAULTS);
-	EEPROM.begin();//eepromSize); // TODO:: check against something, it depends on your hardware, ATMega168 has only 512
+	EEPROM.begin();//eepromSize); // TODO:: check against something
 	CDS::EEPROMBuffer* eepromBuffer = new CDS::EEPROMBuffer(0);
 	this->storageIterator = CDS::Iterator(eepromBuffer, eepromSize);
 	bool validDefaults = CDS::Element::valid(&storageIterator);
@@ -25,7 +25,7 @@ void USBRFMApp::setup() {
 			uint8_t value =  pgm_read_byte(DEFAULTS + i);
 			EEPROM.write(i, value);
 		}
-		// EEPROM.commit();
+		//EEPROM.commit();
 	}
 	// TODO:: check version or structure
 	

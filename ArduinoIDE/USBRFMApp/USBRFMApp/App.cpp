@@ -61,8 +61,8 @@ void USBRFMApp::App::send(CDS::DataBuffer* params, CDS::DataBuffer* response) {
 		CDS::DataBuffer* sentObject = CDS::Object::newObject(object, K("sent"));
 		CDS::DataBuffer* total = CDS::Object::newNumber(sentObject, K("total"));
 		CDS::Number::set(total, sent);
-		//CDS::DataBuffer* heap = CDS::Object::newNumber(sentObject, K("heap"));
-		//CDS::Number::set(heap, ESP.getFreeHeap());
+		// CDS::DataBuffer* heap = CDS::Object::newNumber(sentObject, K("heap"));
+		// CDS::Number::set(heap, ESP.getFreeHeap());
 	}
 }
 

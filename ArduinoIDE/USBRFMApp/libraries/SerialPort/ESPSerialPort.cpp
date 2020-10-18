@@ -76,30 +76,62 @@ SerialMode SerialPort_MODE(int tx, int rx) {
 
 
 void SerialPort::applySettings() {
-	bool hardwareRX = 127 <= this->settings.rx;
-	bool hardwareTX = 127 <= this->settings.tx;
-	bool softwareRX = 0 <= this->settings.rx && this->settings.rx < 127;
-	bool softwareTX = 0 <= this->settings.tx && this->settings.tx < 127;
+	CDS::Iterator storage = this->storage();
+
+	CDS::Iterator rxStorage = CDS::Object::taketo(storage, K("rx"));
+	CDS::DataBuffer* savedRx = CDS::Element::nextElement(&rxStorage);
+	uint8_t rx = CDS::Number::value<uint8_t>(savedRx);
+	delete savedRx;
+	
+	CDS::Iterator txStorage = CDS::Object::taketo(storage, K("tx"));
+	CDS::DataBuffer* savedTx = CDS::Element::nextElement(&txStorage);
+	uint8_t tx = CDS::Number::value<uint8_t>(savedTx);
+	delete savedTx;
+	
+	bool hardwareRX = 127 <= rx;
+	bool hardwareTX = 127 <= tx;
+	bool softwareRX = 0 <= rx && rx < 127;
+	bool softwareTX = 0 <= tx && tx < 127;
 	bool hardware = hardwareRX || hardwareTX;
 	bool software = softwareRX || softwareTX;
 
+	CDS::Iterator baudrateStorage = CDS::Object::taketo(storage, K("baudrate"));
+	CDS::DataBuffer* savedBaudrate = CDS::Element::nextElement(&baudrateStorage);
+	uint32_t baudrate = CDS::Number::value<uint32_t>(savedBaudrate);
+	delete savedBaudrate;
+	
+	CDS::Iterator configStorage = CDS::Object::taketo(storage, K("config"));
+	CDS::DataBuffer* savedConfig = CDS::Element::nextElement(&configStorage);
+	uint8_t config = CDS::Number::value<uint8_t>(savedConfig);
+	delete savedConfig;
+	
+	CDS::Iterator invertStorage = CDS::Object::taketo(storage, K("invert"));
+	CDS::DataBuffer* savedInvert = CDS::Element::nextElement(&invertStorage);
+	uint8_t invert = CDS::Number::value<uint8_t>(savedInvert);
+	delete savedInvert;
+	
+	CDS::Iterator bsizeStorage = CDS::Object::taketo(storage, K("bsize"));
+	CDS::DataBuffer* savedBsize = CDS::Element::nextElement(&bsizeStorage);
+	uint8_t bsize = CDS::Number::value<uint8_t>(savedBsize);
+	delete savedBsize;
+	
 	if (software) {
 		delete this->swserial;
 		this->swserial = new SoftwareSerial();
 		this->swserial->begin(
-			this->settings.baudrate,
-			SerialPort_SWCONFIG(this->settings.config),
-			softwareRX ? this->settings.rx : -1,
-			softwareTX ? this->settings.tx : -1,
-			this->settings.invert,
-			this->settings.bsize);
+			baudrate,
+			SerialPort_SWCONFIG(config),
+			softwareRX ? rx : -1,
+			softwareTX ? tx : -1,
+			invert,
+			bsize);
 	}
 
 	if (hardware) {
-		SerialConfig config = SerialPort_CONFIG(this->settings.config);
-		SerialMode mode = SerialPort_MODE(this->settings.rx, this->settings.tx);
-		Serial.begin(this->settings.baudrate, config, mode, 1, this->settings.invert);
-		Serial.setRxBufferSize(this->settings.bsize);
+		SerialConfig config = SerialPort_CONFIG(config);
+		SerialMode mode = SerialPort_MODE(rx, tx);
+		Serial.begin(baudrate, config, mode, 1, invert);
+		Serial.setRxBufferSize(bsize);
 	}
 
 	if (hardwareRX) {

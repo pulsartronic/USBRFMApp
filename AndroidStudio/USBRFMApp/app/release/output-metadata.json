@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.pulsartronic.webviewusb",
+  "applicationId": "com.pulsartronic.usbrfmapp",
   "variantName": "release",
   "elements": [
     {

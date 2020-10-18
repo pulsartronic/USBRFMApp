@@ -51,12 +51,12 @@ const uint8_t DEFAULTS[] PROGMEM = {
 				CDS::BINARY | 1, 0x03, 's','c','k',
 				CDS::BINARY | 1, 0x01, 0x0F,
 				CDS::BINARY | 1, 0x03, 'n','s','s',
-				CDS::BINARY | 1, 0x01, 0x05, // 0x10
+				CDS::BINARY | 1, 0x01, 0x10, // 0x05, // 0x10, // 
 				CDS::BINARY | 1, 0x03, 'r','s','t',
-				CDS::BINARY | 1, 0x01, 0x07, // 0x0F
+				CDS::BINARY | 1, 0x01, 0x0F, // 0x07, // 0x0F, // 
 				CDS::BINARY | 1, 0x03, 'd','i','o',
 				CDS::ARRAY | 1, 0x06, // 6 elements
-					CDS::BINARY | 1, 0x01, 0x08, // 0x04
+					CDS::BINARY | 1, 0x01, 0x04, // 0x08, // 0x04, // 
 					CDS::BINARY | 1, 0x01, 0xFF,
 					CDS::BINARY | 1, 0x01, 0xFF,
 					CDS::BINARY | 1, 0x01, 0xFF,

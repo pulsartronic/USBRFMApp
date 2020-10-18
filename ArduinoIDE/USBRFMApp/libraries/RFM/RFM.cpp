@@ -121,11 +121,12 @@ void RFM::state(CDS::DataBuffer* params, CDS::DataBuffer* response) {
 
 void RFM::from(CDS::DataBuffer* params) {
 	CDS::Iterator storage = this->storage();
-	//CDS::Element::merge(storage, params);
-	
+	CDS::Element::fill(storage, params);
+	/*
 	CDS::DataBuffer* freq = CDS::Object::get(params, K("freq"));
 	if (NULL != freq) {
 		CDS::Iterator freqStorage = CDS::Object::taketo(storage, K("freq"));
+		
 		CDS::DataBuffer* curr = CDS::Object::get(freq, K("curr"));
 		if (NULL != curr) {
 			CDS::Iterator currStorage = CDS::Object::taketo(freqStorage, K("curr"));
@@ -133,7 +134,15 @@ void RFM::from(CDS::DataBuffer* params) {
 			uint32_t currValue = CDS::Number::value<uint32_t>(curr);
 			CDS::Number::set(savedCurr, currValue);
 			delete savedCurr;
-			// this->settings.freq.curr = CDS::Number::value<uint32_t>(curr);
+		}
+				
+		CDS::DataBuffer* min = CDS::Object::get(freq, K("min"));
+		if (NULL != min) {
+			CDS::Iterator minStorage = CDS::Object::taketo(freqStorage, K("min"));
+			CDS::DataBuffer* savedMin = CDS::Element::nextElement(&minStorage);
+			uint32_t minValue = CDS::Number::value<uint32_t>(min);
+			CDS::Number::set(savedMin, minValue);
+			delete savedMin;
 		}
 		
 		CDS::DataBuffer* max = CDS::Object::get(freq, K("max"));
@@ -143,17 +152,6 @@ void RFM::from(CDS::DataBuffer* params) {
 			uint32_t maxValue = CDS::Number::value<uint32_t>(max);
 			CDS::Number::set(savedMax, maxValue);
 			delete savedMax;
-			// this->settings.freq.max = CDS::Number::value<uint32_t>(max);
-		}
-		
-		CDS::DataBuffer* min = CDS::Object::get(freq, K("min"));
-		if (NULL != min) {
-			CDS::Iterator minStorage = CDS::Object::taketo(freqStorage, K("curr"));
-			CDS::DataBuffer* savedMin = CDS::Element::nextElement(&minStorage);
-			uint32_t minValue = CDS::Number::value<uint32_t>(min);
-			CDS::Number::set(savedMin, minValue);
-			delete savedMin;
-			// this->settings.freq.min = CDS::Number::value<uint32_t>(min);
 		}
 	}
 	
@@ -164,7 +162,6 @@ void RFM::from(CDS::DataBuffer* params) {
 		uint8_t sfacValue = CDS::Number::value<uint8_t>(sfac);
 		CDS::Number::set(savedSfac, sfacValue);
 		delete savedSfac;
-		//this->settings.sfac = CDS::Number::value<uint8_t>(sfac);
 	}
 	
 	CDS::DataBuffer* sbw = CDS::Object::get(params, K("sbw"));
@@ -174,7 +171,6 @@ void RFM::from(CDS::DataBuffer* params) {
 		uint32_t sbwValue = CDS::Number::value<uint32_t>(sbw);
 		CDS::Number::set(savedSbw, sbwValue);
 		delete savedSbw;
-		//this->settings.sbw = CDS::Number::value<uint32_t>(sbw);
 	}
 	
 	CDS::DataBuffer* crat = CDS::Object::get(params, K("crat"));
@@ -184,7 +180,6 @@ void RFM::from(CDS::DataBuffer* params) {
 		uint32_t cratValue = CDS::Number::value<uint32_t>(crat);
 		CDS::Number::set(savedCrat, cratValue);
 		delete savedCrat;
-		//this->settings.crat = CDS::Number::value<uint8_t>(crat);
 	}
 	
 	CDS::DataBuffer* plength = CDS::Object::get(params, K("plength"));
@@ -240,7 +235,7 @@ void RFM::from(CDS::DataBuffer* params) {
 			}
 		}
 		*/
-	}
+	//}
 }
 
   

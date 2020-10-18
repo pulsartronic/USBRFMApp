@@ -1,5 +1,9 @@
 /**
  * This is an example web app which reads/writes bytes from/to a LoRa device
+ * 
+ * If you are no going to use the chat system, you can safely delete
+ * All code marked here as "CHAT specific code"
+ * [chat] and USBRFMApp/App/settings folders
  */
 ///////////////////////////////////////////////////////////////////////////////////
 // App
@@ -82,17 +86,15 @@ App.prototype.onuserinput = function(text) {
 	
 	// ////////////////////////////////////////////////////////////////////////
 	// these are the raw bytes the RFM module is going to emit, change it.
-	// do something like 
+	// Do something like 
 	// let ebuffer = new Uint8Array([0x21, 0x43 ... your values]);
 	let ebuffer = this.settings.aesm.encrypt(buffer);
 	// ////////////////////////////////////////////////////////////////////////
 	// send data --->  AndroidApp -> USB -> Arduino -> LoRa
 	let command = new CDObject();
-		let send = new CDObject();
-			let data = new CDNumber();
-			data.setBuffer(ebuffer);
-		send.set('data', data);
-	command.set('send', send);
+	let send = command.newObject('send');
+	let data = send.newNumber('data');
+	data.setBuffer(ebuffer);
 	this.command(command);
 };
 

@@ -69,7 +69,7 @@ bool CDS::Element::check(CDS::Iterator* iterator) {
 							}
 							break;
 						case CDS::Element::BINARY: {
-							iterator->index += HM;
+							iterator->skip(HM);
 						} break;
 						default: {
 							valid = false;
@@ -90,40 +90,44 @@ bool CDS::Element::check(CDS::Iterator* iterator) {
 
 
 CDS::DataBuffer* CDS::Element::nextElement(Iterator* iterator) {
-	uint8_t initial = iterator->read();
-	uint8_t ET = initial & CDS::TYPE_MASK;
-	uint8_t HML = initial & ~CDS::TYPE_MASK;
-	size_t size = (size_t) 0;
-	for (size_t i = (size_t) 0; i < HML; i++) {
-		size = (size << 8) | ((size_t) iterator->read());
-	}
-	iterator->index -= (1 + HML);
-	size_t dataSize = ((ET & CDS::BINARY) == CDS::BINARY) ? size : (size_t) 0;
-	
-	CDS::DataBuffer* element = iterator->subBuffer((size_t) (1 + HML + dataSize));
-	
-	CDS::DataBuffer* relement = element;
-	switch (ET) {
-		case CDS::Element::ARRAY: {
-			for (size_t i = (size_t) 0; i < size; i++) {
-				CDS::DataBuffer* value = relement->next = CDS::Element::nextElement(iterator);
-				value->prev = relement;
-				relement = CDS::Element::last(value);
-			}
-		} break;
-		case CDS::Element::OBJECT: {
-			for (size_t i = (size_t) 0; i < size; i++) {
-				CDS::DataBuffer* key = relement->next = CDS::Element::nextElement(iterator);
-				key->prev = relement;
-				CDS::DataBuffer* value = key->next = CDS::Element::nextElement(iterator);
-				value->prev = key;
-				relement = CDS::Element::last(value);
-			}
-		} break;
-		case CDS::Element::BINARY: {
-			
-		} break;
-			
+	CDS::DataBuffer* element = NULL;
+	size_t available = iterator->available();
+	if (available) {
+		uint8_t initial = iterator->read();
+		uint8_t ET = initial & CDS::TYPE_MASK;
+		uint8_t HML = initial & ~CDS::TYPE_MASK;
+		size_t size = (size_t) 0;
+		for (size_t i = (size_t) 0; i < HML; i++) {
+			size = (size << 8) | ((size_t) iterator->read());
+		}
+		iterator->index -= (1 + HML);
+		size_t dataSize = ((ET & CDS::BINARY) == CDS::BINARY) ? size : (size_t) 0;
+		
+		element = iterator->subBuffer((size_t) (1 + HML + dataSize));
+		
+		CDS::DataBuffer* relement = element;
+		switch (ET) {
+			case CDS::Element::ARRAY: {
+				for (size_t i = (size_t) 0; i < size; i++) {
+					CDS::DataBuffer* value = relement->next = CDS::Element::nextElement(iterator);
+					value->prev = relement;
+					relement = CDS::Element::last(value);
+				}
+			} break;
+			case CDS::Element::OBJECT: {
+				for (size_t i = (size_t) 0; i < size; i++) {
+					CDS::DataBuffer* key = relement->next = CDS::Element::nextElement(iterator);
+					key->prev = relement;
+					CDS::DataBuffer* value = key->next = CDS::Element::nextElement(iterator);
+					value->prev = key;
+					relement = CDS::Element::last(value);
+				}
+			} break;
+			case CDS::Element::BINARY: {
+				
+			} break;
+				
+		}
 	}
 	return element;
 }
@@ -215,31 +219,33 @@ CDS::DataBuffer* CDS::Element::last(CDS::DataBuffer* element) {
 }
 
 void CDS::Element::last(CDS::Iterator* iterator) {
+	bool available = iterator->available();
+	if (available) {
+		uint8_t initial = iterator->read();
+		uint8_t ET = initial & CDS::TYPE_MASK;
+		size_t hml = (size_t) (initial & ~CDS::TYPE_MASK);
+		size_t size = (size_t) 0;
+		for (size_t i = (size_t) 0; i < hml; i++) size = (size << 8) | ((size_t) iterator->read());
 
-	uint8_t initial = iterator->read();
-	uint8_t ET = initial & CDS::TYPE_MASK;
-	size_t hml = (size_t) (initial & ~CDS::TYPE_MASK);
-	size_t size = (size_t) 0;
-	for (size_t i = (size_t) 0; i < hml; i++) size = (size << 8) | ((size_t) iterator->read());
-
-	bool isObject = (CDS::OBJECT == ET);
-	if (isObject) {
-		for (size_t i = (size_t) 0; i < size; i++) {
-			CDS::Element::last(iterator); // KEY
-			CDS::Element::last(iterator); // VALUE
+		bool isObject = (CDS::OBJECT == ET);
+		if (isObject) {
+			for (size_t i = (size_t) 0; i < size; i++) {
+				CDS::Element::last(iterator); // KEY
+				CDS::Element::last(iterator); // VALUE
+			}
 		}
-	}
-	
-	bool isArray = (CDS::ARRAY == ET);
-	if (isArray) {
-		for (size_t i = (size_t) 0; i < size; i++) {
-			CDS::Element::last(iterator);
+		
+		bool isArray = (CDS::ARRAY == ET);
+		if (isArray) {
+			for (size_t i = (size_t) 0; i < size; i++) {
+				CDS::Element::last(iterator);
+			}
 		}
-	}
-	
-	bool isNumber = (CDS::BINARY == ET);
-	if (isNumber) {
-		iterator->index += size;
+		
+		bool isNumber = (CDS::BINARY == ET);
+		if (isNumber) {
+			iterator->skip(size);
+		}
 	}
 }
 
@@ -268,6 +274,7 @@ void CDS::Element::serialize(DataBuffer* element, Iterator* iterator) {
 
 CDS::DataBuffer* CDS::Element::replace(DataBuffer* element, DataBuffer* newElement) {
 	if (element != newElement) {
+	// TODO::
 	/*
 		CDS::DataBuffer* oprev = element->prev;
 		CDS::DataBuffer* olast = CDS::Element::last(element);
@@ -288,15 +295,16 @@ CDS::DataBuffer* CDS::Element::replace(DataBuffer* element, DataBuffer* newEleme
 	return NULL;
 }
 
-void CDS::Element::merge(CDS::Iterator storage, CDS::DataBuffer* element) {
+void CDS::Element::fill(CDS::Iterator storage, CDS::DataBuffer* element) {
 	size_t size = CDS::Element::size(element);
+	
 	bool isObject = CDS::Element::isObject(element);
 	if (isObject) {
 		for (size_t i = (size_t) 0; i < size; i++) {
 			CDS::DataBuffer* key = CDS::Object::key(element, i);
 			CDS::DataBuffer* value = key->next;
 			CDS::Iterator childStorage = CDS::Object::taketo(storage, key);
-			CDS::Element::merge(childStorage, value);
+			CDS::Element::fill(childStorage, value);
 		}
 	}
 	
@@ -305,7 +313,7 @@ void CDS::Element::merge(CDS::Iterator storage, CDS::DataBuffer* element) {
 		for (size_t i = (size_t) 0; i < size; i++) {
 			CDS::DataBuffer* value = CDS::Array:: get(element, i);
 			CDS::Iterator childStorage = CDS::Array::taketo(storage, i);
-			CDS::Element::merge(childStorage, value);
+			CDS::Element::fill(childStorage, value);
 		}
 	}
 	
@@ -313,8 +321,7 @@ void CDS::Element::merge(CDS::Iterator storage, CDS::DataBuffer* element) {
 	if (isNumber) {
 		CDS::DataBuffer* saved = CDS::Element::nextElement(&storage);
 		if (NULL != saved) {
-			//uint32_t value = CDS::Number::value<uint32_t>(curr);
-			//CDS::Number::set(saved, element);
+			CDS::Number::setData(saved, element);
 		}
 		delete saved;
 	}

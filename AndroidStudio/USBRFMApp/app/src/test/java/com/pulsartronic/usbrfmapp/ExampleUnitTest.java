@@ -1,4 +1,4 @@
-package com.pulsartronic.webviewusb;
+package com.pulsartronic.usbrfmapp;
 
 import org.junit.Test;
 

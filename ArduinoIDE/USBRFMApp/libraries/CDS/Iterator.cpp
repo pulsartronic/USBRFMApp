@@ -9,7 +9,7 @@ CDS::Iterator::Iterator(CDS::DataBuffer* buffer, size_t size) : buffer(buffer), 
 }
 
 size_t CDS::Iterator::available() {
-	size_t available = (this->size >= this->index) ? (this->size - this->index) : 0u;
+	size_t available = (this->size >= this->index) ? (this->size - this->index) : (size_t) 0;
 	return available;
 }
 
@@ -34,6 +34,11 @@ CDS::DataBuffer* CDS::Iterator::subBuffer(size_t size) {
 	CDS::DataBuffer* subBuffer = this->buffer->subBuffer(this->index, size);
 	this->index += size;
 	return subBuffer;
+}
+
+void CDS::Iterator::skip(size_t count) {
+	size_t available = this->available();
+	this->index += min(count, available);
 }
 
 

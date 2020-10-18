@@ -182,35 +182,35 @@ SerialPort.prototype.save = function(command) {
 	Node.prototype.save.call(this, command);
 	let isChanged = this.isChanged();
 	if (isChanged) {
-		let serial = command.object('save');
+		let serial = command.newObject('save');
 		
 		if (this.baudrate.changed) {
-			let baudrate = serial.number('baudrate');
+			let baudrate = serial.newNumber('baudrate');
 			baudrate.setUInt32(this.baudrate.value()|0);
 		}
 		
 		if (this.config.changed) {
-			let config = serial.number('config');
+			let config = serial.newNumber('config');
 			config.setUInt8(this.config.value()|0);
 		}
 			
 		if (this.invert.changed) {
-			let invert = serial.number('invert');
+			let invert = serial.newNumber('invert');
 			invert.setUInt8(this.invert.value()|0);
 		}
 		
 		if (this.bsize.changed) {
-			let bsize = serial.number('bsize');
+			let bsize = serial.newNumber('bsize');
 			bsize.setUInt16(this.bsize.value()|0);
 		}
 		
 		if (this.rx.changed) {
-			let rx = serial.number('rx');
+			let rx = serial.newNumber('rx');
 			rx.setUInt8(this.rx.value()|0);
 		}
 		
 		if (this.tx.changed) {
-			let tx = serial.number('tx');
+			let tx = serial.newNumber('tx');
 			tx.setUInt8(this.tx.value()|0);
 		}
 	}

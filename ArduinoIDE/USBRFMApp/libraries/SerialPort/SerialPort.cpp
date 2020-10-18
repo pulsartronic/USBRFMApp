@@ -53,52 +53,9 @@ void SerialPort::state(CDS::DataBuffer* params, CDS::DataBuffer* response) {
 	CDS::Object::set(state, K("config"), config);
 }
 
-//void SerialPort::to(CDS::DataBuffer* response) {
-/*
-	CDS::DataBuffer* baudrate = CDS::Object::newNumber(response, K("baudrate"));
-	CDS::Number::set(baudrate, this->settings.baudrate);
-
-	CDS::DataBuffer* config = CDS::Object::newNumber(response, K("config"));
-	CDS::Number::set(config, this->settings.config);
-
-	CDS::DataBuffer* invert = CDS::Object::newNumber(response, K("invert"));
-	CDS::Number::set(invert, this->settings.invert);
-
-	CDS::DataBuffer* rx = CDS::Object::newNumber(response, K("rx"));
-	CDS::Number::set(rx, this->settings.rx);
-
-	CDS::DataBuffer* tx = CDS::Object::newNumber(response, K("tx"));
-	CDS::Number::set(tx, this->settings.tx);
-	*/
-//}
-
 void SerialPort::from(CDS::DataBuffer* params) {
-/*
-	CDS::DataBuffer* baudrate = CDS::Object::get(params, K("baudrate"));
-	if (NULL != baudrate) {
-		//this->settings.baudrate = CDS::Number::value<uint32_t>(baudrate);
-	}
-	
-	CDS::DataBuffer* config = CDS::Object::get(params, K("config"));
-	if (NULL != config) {
-		//this->settings.config = CDS::Number::value<uint8_t>(config);
-	}
-	
-	CDS::DataBuffer* invert = CDS::Object::get(params, K("invert"));
-	if (NULL != invert) {
-		//this->settings.config = (bool) CDS::Number::value<uint8_t>(invert);
-	}
-	
-	CDS::DataBuffer* rx = CDS::Object::get(params, K("rx"));
-	if (NULL != rx) {
-		//this->settings.rx = CDS::Number::value<uint8_t>(rx);
-	}
-	
-	CDS::DataBuffer* tx = CDS::Object::get(params, K("tx"));
-	if (NULL != tx) {
-		//this->settings.tx = CDS::Number::value<uint8_t>(tx);
-	}
-	*/
+	//CDS::Iterator storage = this->storage();
+	//CDS::Element::fill(storage, params);
 }
 
 size_t SerialPort::write(uint8_t b) {

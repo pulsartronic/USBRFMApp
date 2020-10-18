@@ -89,14 +89,14 @@ let RFM = function(parent, name) {
 	this.configuration.tag.className = 'Advanced';
 	this.tag.append(this.configuration.tag);
 
-	this.minfreq = new InputRow(this, 'MAX Frequency', 'text', '');
+	this.minfreq = new InputRow(this, 'MIN Frequency', 'text', '');
 	this.minfreq.tag.classList.add('Boundary');
 	this.configuration.append(this.minfreq.tag);
 	this.minfreq.validator = new FloatValidator(this.minfreq);
 	this.minfreq.setHelp(`MHz min and max are the boundaries the Radio Frequency Module can operate at. TTN is going to tell the gateway the frequency it should use to emit DOWN packets, if it's outside this boundaries, the gateway will answer TTN with an 'unsupported frequency error'.`);
 	// TODO:: add tipical values explanation
 
-	this.maxfreq = new InputRow(this, 'MIN Frequency', 'text', '');
+	this.maxfreq = new InputRow(this, 'MAX Frequency', 'text', '');
 	this.maxfreq.tag.classList.add('Boundary');
 	this.configuration.append(this.maxfreq.tag);
 	this.maxfreq.validator = new FloatValidator(this.maxfreq);
@@ -212,49 +212,47 @@ RFM.prototype.save = function(command) {
 	Node.prototype.save.call(this, command);
 	let isChanged = this.isChanged();
 	if (isChanged) {
-		let rfm = command.object('save');
+		let rfm = command.newObject('save');
 		if (this.freq.changed || this.minfreq.changed || this.maxfreq.changed) {
-			let freq = rfm.object('freq');
+			let freq = rfm.newObject('freq');
 			if (this.freq.changed) {
-				let curr = freq.number('curr');
+				let curr = freq.newNumber('curr');
 				curr.setUInt32(1000000 * this.freq.value());
 			}
 			
 			if (this.minfreq.changed) {
-				let min = freq.number('min');
+				let min = freq.newNumber('min');
 				min.setUInt32(1000000 * this.minfreq.value());
 			}
 			
 			if (this.maxfreq.changed) {
-				let max = freq.number('max');
+				let max = freq.newNumber('max');
 				max.setUInt32(1000000 * this.maxfreq.value());
 			}
 		}
 		
-		// rfm.cad = 0;
-		
 		if (this.sfac.changed) {
-			let sfac = rfm.number('sfac');
+			let sfac = rfm.newNumber('sfac');
 			sfac.setUInt8(this.sfac.value()|0);
 		}
 		
 		if (this.sbw.changed) {
-			let sbw = rfm.number('sbw');
+			let sbw = rfm.newNumber('sbw');
 			sbw.setUInt32(this.sbw.value()|0);
 		}
 		
 		if (this.plength.changed) {
-			let plength = rfm.number('plength');
+			let plength = rfm.newNumber('plength');
 			plength.setUInt8(this.plength.value()|0);
 		}
 		
 		if (this.sw.changed) {
-			let sw = rfm.number('sw');
+			let sw = rfm.newNumber('sw');
 			sw.setUInt8(this.sw.value());
 		}
 		
 		if (this.txpw.changed) {
-			let txpw = rfm.number('txpw');
+			let txpw = rfm.newNumber('txpw');
 			txpw.setUInt8(this.txpw.value());
 		}
 		
@@ -263,29 +261,29 @@ RFM.prototype.save = function(command) {
         	dioChanged = dioChanged || this[`dio${i}`].changed;
         
 		if (this.miso.changed || this.mosi.changed || this.sck.changed || this.nss.changed || this.rst.changed || dioChanged) {
-			let pins = rfm.object('pins');
+			let pins = rfm.newObject('pins');
 			if (this.miso.changed) {
-				let miso = pins.number('miso');
+				let miso = pins.newNumber('miso');
 				miso.setUInt8(this.miso.value() | 0);
 			}
 			
 			if (this.mosi) {
-				let mosi = pins.number('mosi');
+				let mosi = pins.newNumber('mosi');
 				mosi.setUInt8(this.mosi.value() | 0);
 			}
 			
 			if (this.sck.changed) {
-				let sck = pins.number('sck');
+				let sck = pins.newNumber('sck');
 				sck.setUInt8(this.sck.value() | 0);
 			}
 			
 			if (this.nss.changed) {
-				let nss = pins.number('nss');
+				let nss = pins.newNumber('nss');
 				nss.setUInt8(this.nss.value() | 0);
 			}
 			
 			if (this.rst) {
-				let rst = pins.number('rst');
+				let rst = pins.newNumber('rst');
 				rst.setUInt8(this.rst.value() | 0);
 			}
 			

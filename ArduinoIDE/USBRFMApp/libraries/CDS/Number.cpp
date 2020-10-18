@@ -22,6 +22,19 @@ void CDS::Number::setChars(CDS::DataBuffer* number, const uint8_t* name) {
 	}
 }
 
+void CDS::Number::setData(CDS::DataBuffer* number, CDS::DataBuffer* data) {
+	size_t datasize = CDS::Element::size(data);
+	CDS::Element::resize(number, datasize);
+	size_t numbersize = CDS::Element::size(number);
+	size_t size = min(datasize, numbersize);
+	size_t hmla = CDS::Element::hml(number);
+	size_t hmlb = CDS::Element::hml(data);
+	for (size_t i = (size_t) 0; i < size; i++) {
+		uint8_t value = data->read(1 + hmlb + i);
+		number->write((size_t) (1 + hmla + i), value);
+	}
+}
+
 bool CDS::Number::cmp(CDS::DataBuffer* number, const uint8_t* name) {
 	size_t size = CDS::Element::size(number);
 	size_t HML = CDS::Element::hml(number);
@@ -38,16 +51,19 @@ bool CDS::Number::cmp(CDS::DataBuffer* number, const uint8_t* name) {
 }
 
 bool CDS::Number::cmp(CDS::DataBuffer* a, CDS::DataBuffer* b) {
-	size_t asize = CDS::Element::size(a);
-	size_t ahml = CDS::Element::hml(a);
-	size_t bsize = CDS::Element::size(b);
-	size_t bhml = CDS::Element::hml(b);
-	bool equals = (asize == bsize);
-	if (equals) {
-		for (size_t i = (size_t) 0; i < asize && equals; i++) {
-			uint8_t av = a->read((size_t) (1 + ahml + i));
-			uint8_t bv = b->read((size_t) (1 + bhml + i));
-			equals = equals && (av == bv);
+	bool equals = false;
+	if (NULL != a && NULL != b) {
+		size_t asize = CDS::Element::size(a);
+		size_t ahml = CDS::Element::hml(a);
+		size_t bsize = CDS::Element::size(b);
+		size_t bhml = CDS::Element::hml(b);
+		equals = (asize == bsize);
+		if (equals) {
+			for (size_t i = (size_t) 0; i < asize && equals; i++) {
+				uint8_t av = a->read((size_t) (1 + ahml + i));
+				uint8_t bv = b->read((size_t) (1 + bhml + i));
+				equals = equals && (av == bv);
+			}
 		}
 	}
 	return equals;
