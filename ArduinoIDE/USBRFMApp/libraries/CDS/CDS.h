@@ -141,7 +141,7 @@ namespace CDS {
 		static bool isNumber(DataBuffer* element);
 		static size_t calculateLength(DataBuffer* element);
 		static void serialize(DataBuffer* element, CDS::Iterator* iterator);
-		static void fill(CDS::Iterator storage, CDS::DataBuffer* element);
+		static void fill(Iterator storage, DataBuffer* element);
 		//static String stringify(DataBuffer* element);
 	};
 	
@@ -155,6 +155,7 @@ namespace CDS {
 		static DataBuffer* get(DataBuffer* object, const uint8_t* name);
 		static CDS::DataBuffer* key(DataBuffer* object, size_t index);
 		static void set(DataBuffer* object, const uint8_t* name, CDS::DataBuffer* value);
+		static void set(DataBuffer* object, DataBuffer* key, DataBuffer* value);
 		
 		static Iterator taketo(Iterator iterator, const uint8_t* name);
 		static Iterator taketo(Iterator storage, DataBuffer* key);
@@ -205,7 +206,7 @@ namespace CDS {
 		}
 		
 		static void set(DataBuffer* number, float value) {
-			size_t size = (size_t) sizeof(float); // WARNING, take care of endianess
+			size_t size = (size_t) sizeof(float); // WARNING, take care of endianness
 			CDS::Element::resize(number, size);
 			size_t hml = CDS::Element::hml(number);
 			for (size_t i = (size_t) 0; i < size; i++) {

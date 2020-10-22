@@ -1,5 +1,58 @@
 #include <CDS.h>
 
+/*
+ * See DEFAULTS[] as the following data structure:
+ *
+ * {
+ *     "serial" : {
+ *         "baudrate" : 9600,
+ *         "config" : 3,
+ *         "invert" : false,
+ *         "bsize" : 128,
+ *         "rx" : 127,
+ *         "tx" : 127
+ *     },
+ *     "rfm" : {
+ *         "freq" : {
+ *             "curr" : 868300000,
+ *             "min" : 858000000,
+ *             "max" : 878000000
+ *         },
+ *         "txpw" : 17,
+ *         "sfac" : 7,
+ *         "sbw" : 125000,
+ *         "crat" : 5,
+ *         "plength" : 8,
+ *         "sw" : 57,
+ *         "crc" : true,
+ *         "iiq" : false,
+ *         "pins" : {
+ *             "miso" : 14,
+ *             "mosi" : 16,
+ *             "sck" : 15,
+ *             "nss" : 5,
+ *             "rst" : 7,	
+ *             "dio" : [8, -1, -1, -1, -1, -1]
+ *         }
+ *     }
+ * }
+ *
+ * Every entry starts with: TYPE | HM, SIZE
+ *
+ * example:
+ * CDS::BINARY | 1, 0x06, 's','e','r','i','a','l'
+ * 
+ * TYPE = CDS::BINARY  data type
+ * HM = 1              how many bytes we need to represent its length
+ * SIZE = 0x06         data length represented using HM bytes, if HM = 2 it could be for example SIZE = 0x12, 0x03
+ * CONTENT = 's','e','r','i','a','l'
+ *
+ * In the case of CDS::OBJECT, LENGTH tells us how many key/value pairs the object has
+ * In the case of CDS::ARRAY,  LENGTH tells us how many elements the array has
+ * In the case of CDS::BINARY, LENGTH tells us how many bytes it has
+ *
+ */
+
 const uint8_t DEFAULTS[] PROGMEM = {
 	CDS::OBJECT | 1, 0x03,
 		CDS::BINARY | 1, 0x06, 's','e','r','i','a','l', // see libraries/SerialPort/SerialPort.cpp
@@ -19,13 +72,7 @@ const uint8_t DEFAULTS[] PROGMEM = {
 		CDS::BINARY | 1, 0x03, 'r','f','m', // see libraries/RFM/RFM.cpp
 		CDS::OBJECT | 1, 0x0A, // 10 key/values
 			CDS::BINARY | 1, 0x04, 'f','r','e','q',
-			CDS::OBJECT | 1, 0x03, // 3 key/values
-				CDS::BINARY | 1, 0x04, 'c','u','r','r',
-				CDS::BINARY | 1, 0x04, 0x33, 0xC1, 0x34, 0xE0, // 0x33C134E0 = 868300000
-				CDS::BINARY | 1, 0x03, 'm','i','n',
-				CDS::BINARY | 1, 0x04, 0x33, 0x24, 0x0A, 0x80, // 858000000
-				CDS::BINARY | 1, 0x03, 'm','a','x',
-				CDS::BINARY | 1, 0x04, 0x34, 0x55, 0x37, 0x80, // 878000000
+			CDS::BINARY | 1, 0x04, 0x33, 0xC1, 0x34, 0xE0, // 0x33C134E0 = 868300000
 			CDS::BINARY | 1, 0x04, 't','x','p','w', // tx power
 			CDS::BINARY | 1, 0x01, 0x11, // = 17
 			CDS::BINARY | 1, 0x04, 's','f','a','c', // spreading factor
@@ -51,16 +98,12 @@ const uint8_t DEFAULTS[] PROGMEM = {
 				CDS::BINARY | 1, 0x03, 's','c','k',
 				CDS::BINARY | 1, 0x01, 0x0F,
 				CDS::BINARY | 1, 0x03, 'n','s','s',
-				CDS::BINARY | 1, 0x01, 0x10, // 0x05, // 0x10, // 
+				CDS::BINARY | 1, 0x01, 0x05, // 0x10, // 
 				CDS::BINARY | 1, 0x03, 'r','s','t',
-				CDS::BINARY | 1, 0x01, 0x0F, // 0x07, // 0x0F, // 
+				CDS::BINARY | 1, 0x01, 0x07, // 0x0F, // 
 				CDS::BINARY | 1, 0x03, 'd','i','o',
-				CDS::ARRAY | 1, 0x06, // 6 elements
-					CDS::BINARY | 1, 0x01, 0x04, // 0x08, // 0x04, // 
-					CDS::BINARY | 1, 0x01, 0xFF,
-					CDS::BINARY | 1, 0x01, 0xFF,
-					CDS::BINARY | 1, 0x01, 0xFF,
-					CDS::BINARY | 1, 0x01, 0xFF,
+				CDS::ARRAY | 1, 0x02, // 2 elements
+					CDS::BINARY | 1, 0x01, 0x08, // 0x04, // 
 					CDS::BINARY | 1, 0x01, 0xFF,
 		CDS::BINARY | 1, 0x03, 'a','p','p',
 		CDS::OBJECT | 1, 0x00

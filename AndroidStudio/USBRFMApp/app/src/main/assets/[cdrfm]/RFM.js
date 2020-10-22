@@ -89,18 +89,6 @@ let RFM = function(parent, name) {
 	this.configuration.tag.className = 'Advanced';
 	this.tag.append(this.configuration.tag);
 
-	this.minfreq = new InputRow(this, 'MIN Frequency', 'text', '');
-	this.minfreq.tag.classList.add('Boundary');
-	this.configuration.append(this.minfreq.tag);
-	this.minfreq.validator = new FloatValidator(this.minfreq);
-	this.minfreq.setHelp(`MHz min and max are the boundaries the Radio Frequency Module can operate at. TTN is going to tell the gateway the frequency it should use to emit DOWN packets, if it's outside this boundaries, the gateway will answer TTN with an 'unsupported frequency error'.`);
-	// TODO:: add tipical values explanation
-
-	this.maxfreq = new InputRow(this, 'MAX Frequency', 'text', '');
-	this.maxfreq.tag.classList.add('Boundary');
-	this.configuration.append(this.maxfreq.tag);
-	this.maxfreq.validator = new FloatValidator(this.maxfreq);
-
 	this.txpw = new InputRow(this, 'TX power', 'select', '');
 	this.txpw.addOptions(TXPWS);
 	this.configuration.append(this.txpw.tag);
@@ -122,7 +110,11 @@ let RFM = function(parent, name) {
 	this.configuration.append(this.sbw.tag);
 	this.sbw.setHelp('This is the Bandwidth the Radio Frequency Module is going to use to receive packets if CAD is turned OFF (wich in this version is still unsupported). TTN is going to tell the gateway wich Bandwidth configuration it should use to emit DOWN packets.');
 
-	// TODO:: add crat
+	this.crat = new InputRow(this, 'Coding rate 4', 'select', '');
+	this.crat.addOptions(CRATS);
+	this.configuration.append(this.crat.tag);
+	this.crat.validator = new IntegerValidator(this.crat, 1);
+	// TODO:: add link to wikipedia
 
 	this.plength = new InputRow(this, 'Preamble Length', 'text', '');
 	this.plength.tag.classList.add('Short');
@@ -136,6 +128,16 @@ let RFM = function(parent, name) {
 	this.configuration.append(this.sw.tag);
 	this.sw.validator = new ByteValidator(this.sw);
 	this.sw.setHelp('This is an advanced configuration, default value should work, yet you can change it if you need.');
+	// TODO:: add link to wikipedia
+	
+	this.iiq = new InputRow(this, 'Invert IQ Signals', 'checkbox', '');
+	this.iiq.input.input.className = '';
+	this.configuration.append(this.iiq.tag);
+	// TODO:: add link to wikipedia
+	
+	this.crc = new InputRow(this, 'CRC', 'checkbox', '');
+	this.crc.input.input.className = '';
+	this.configuration.append(this.crc.tag);
 	// TODO:: add link to wikipedia
 
 	this.pins = new Advanced(this, 'PIN connections');
@@ -151,15 +153,15 @@ let RFM = function(parent, name) {
 	this.separator.className = 'Separator';
 	this.pins.append(this.separator);
 
-	this.miso = new InputRow(this, 'MISO', 'select', '', true);
+	this.miso = new InputRow(this, 'miso', 'select', '', true);
 	this.miso.addOptions(PINS);
 	this.pins.append(this.miso.tag);
 
-	this.mosi = new InputRow(this, 'MOSI', 'select', '', true);
+	this.mosi = new InputRow(this, 'mosi', 'select', '', true);
 	this.mosi.addOptions(PINS);
 	this.pins.append(this.mosi.tag);
 
-	this.sck = new InputRow(this, 'SCK', 'select', '', true);
+	this.sck = new InputRow(this, 'sck', 'select', '', true);
 	this.sck.addOptions(PINS);
 	this.pins.append(this.sck.tag);
 
@@ -189,20 +191,21 @@ RFM.prototype.init = function(data) {
 
 RFM.prototype.isChanged = function() {
     let changed =  this.freq.changed
-	          || this.minfreq.changed
-	          || this.maxfreq.changed
 	          || this.sfac.changed
 	          || this.txpw.changed
 	          || this.sbw.changed
 	          || this.plength.changed
+	          || this.crat.changed
 	          || this.sw.changed
+  	          || this.iiq.changed
+  	          || this.crc.changed
 	          || this.miso.changed
 	          || this.mosi.changed
 	          || this.sck.changed
 	          || this.nss.changed
 	          || this.rst.changed;
 
-    for (let i = 0; i <= 5; i++)
+    for (let i = 0; i <= 2; i++)
         changed = changed || this[`dio${i}`].changed;
 
 	return changed;
@@ -213,22 +216,10 @@ RFM.prototype.save = function(command) {
 	let isChanged = this.isChanged();
 	if (isChanged) {
 		let rfm = command.newObject('save');
-		if (this.freq.changed || this.minfreq.changed || this.maxfreq.changed) {
-			let freq = rfm.newObject('freq');
-			if (this.freq.changed) {
-				let curr = freq.newNumber('curr');
-				curr.setUInt32(1000000 * this.freq.value());
-			}
-			
-			if (this.minfreq.changed) {
-				let min = freq.newNumber('min');
-				min.setUInt32(1000000 * this.minfreq.value());
-			}
-			
-			if (this.maxfreq.changed) {
-				let max = freq.newNumber('max');
-				max.setUInt32(1000000 * this.maxfreq.value());
-			}
+		
+		if (this.freq.changed) {
+			let freq = rfm.newNumber('freq');
+			freq.setUInt32(1000000 * this.freq.value());
 		}
 		
 		if (this.sfac.changed) {
@@ -246,6 +237,11 @@ RFM.prototype.save = function(command) {
 			plength.setUInt8(this.plength.value()|0);
 		}
 		
+		if (this.crat.changed) {
+			let crat = rfm.newNumber('crat');
+			crat.setUInt8(this.crat.value()|0);
+		}
+		
 		if (this.sw.changed) {
 			let sw = rfm.newNumber('sw');
 			sw.setUInt8(this.sw.value());
@@ -254,6 +250,16 @@ RFM.prototype.save = function(command) {
 		if (this.txpw.changed) {
 			let txpw = rfm.newNumber('txpw');
 			txpw.setUInt8(this.txpw.value());
+		}
+		
+		if (this.iiq.changed) {
+			let iiq = rfm.newNumber('iiq');
+			iiq.setUInt8(this.iiq.value()|0);
+		}
+		
+		if (this.crc.changed) {
+			let crc = rfm.newNumber('crc');
+			crc.setUInt8(this.crc.value()|0);
 		}
 		
 		let dioChanged = false;
@@ -288,8 +294,8 @@ RFM.prototype.save = function(command) {
 			}
 			
 			if (dioChanged) {
-				let dio = pins.array('dio');
-				for (let i = 0; i <= 5; i++) {
+				let dio = pins.newArray('dio');
+				for (let i = 0; i <= 2; i++) {
 					let diox = new CDNumber();
 					diox.setUInt8(this[`dio${i}`].value()|0);
 					dio.add(diox);
@@ -313,23 +319,8 @@ RFM.prototype.state = function(params) {
 	if (config) {
 		let freqElement = config.get('freq');
 		if (freqElement) {
-			let currElement = freqElement.get('curr');
-			if (currElement) {
-				let curr = currElement.uint();
-				this.freq.pong(curr / 1000000);
-			}
-			
-			let minElement = freqElement.get('min');
-			if (minElement) {
-				let min = minElement.uint();
-				this.minfreq.pong(min / 1000000);
-			}
-			
-			let maxElement = freqElement.get('max');
-			if (maxElement) {
-				let max = maxElement.uint();
-				this.maxfreq.pong(max / 1000000);
-			}
+			let freq = freqElement.uint();
+			this.freq.pong(freq / 1000000);
 		}
 		
 		let cadElement = config.get('cad');
@@ -356,6 +347,12 @@ RFM.prototype.state = function(params) {
 			this.sbw.pong(sbw);
 		}
 		
+		let cratElement = config.get('crat');
+		if (cratElement) {
+			let crat = cratElement.uint();
+			this.crat.pong(crat);
+		}
+		
 		let plengthElement = config.get('plength');
 		if (plengthElement) {
 			let plength = plengthElement.uint();
@@ -366,6 +363,18 @@ RFM.prototype.state = function(params) {
 		if (swElement) {
 			let sw = swElement.uint() || '1';
 			this.sw.pong('0x' + `${sw.toString(16)}`.padStart(2, '0'));
+		}
+		
+		let iiqElement = config.get('iiq');
+		if (iiqElement) {
+			let iiq = iiqElement.uint();
+			this.iiq.pong(iiq);
+		}
+		
+		let crcElement = config.get('crc');
+		if (crcElement) {
+			let crc = crcElement.uint();
+			this.crc.pong(crc);
 		}
 		
 		let pinsElement = config.get('pins');

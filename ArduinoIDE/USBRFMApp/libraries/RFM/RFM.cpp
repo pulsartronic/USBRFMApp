@@ -121,6 +121,9 @@ void RFM::state(CDS::DataBuffer* params, CDS::DataBuffer* response) {
 void RFM::from(CDS::DataBuffer* params) {
 	CDS::Iterator storage = this->storage();
 	CDS::Element::fill(storage, params);
+	#ifdef ESP8266
+		EEPROM.commit();
+	#endif
 }
 
   

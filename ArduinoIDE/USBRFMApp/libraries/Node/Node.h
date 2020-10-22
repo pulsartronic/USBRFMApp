@@ -5,10 +5,6 @@
 #ifndef __Node__
 #define __Node__
 
-class Node;
-
-
-
 class Node {
 	public:
 	class Method {

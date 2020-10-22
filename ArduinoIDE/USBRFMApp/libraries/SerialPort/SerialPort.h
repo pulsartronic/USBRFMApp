@@ -21,26 +21,14 @@ class SerialPort : public Node, public Stream {
 		virtual void loop();
 		virtual int send(CDS::DataBuffer* command);
 	};
-/*
-	class Settings {
-		public:
-		long baudrate = 9600l;
-		uint8_t config = 3;
-		bool invert = false;
-		uint16_t bsize = 128;
-		int8_t rx = 127;
-		int8_t tx = 127;
-	};
-	*/
+
 	SoftwareSerial* swserial = NULL;
 	Stream* input = NULL;
 	Stream* output = NULL;
 	Channel channel;
-	//Settings settings;
-	bool status = false;
 
-	virtual ~SerialPort();
 	SerialPort(Node* parent, const char* name);
+	virtual ~SerialPort();
 	void setup();
 	void loop();
 	
@@ -48,7 +36,6 @@ class SerialPort : public Node, public Stream {
 	virtual void state(CDS::DataBuffer* params, CDS::DataBuffer* response);
 	virtual void save(CDS::DataBuffer* params, CDS::DataBuffer* response);
 	virtual void from(CDS::DataBuffer* params);
-	//virtual void to(CDS::DataBuffer* response);
 
 	virtual int available() {return this->input->available();}
 	virtual int read() {return this->input->read();}

@@ -16,16 +16,22 @@ void USBRFMApp::setup() {
 	RootNode::setup();
 	
 	size_t eepromSize = sizeof(DEFAULTS);
-	EEPROM.begin();//eepromSize); // TODO:: check against something
+	#ifdef ESP8266
+		EEPROM.begin(eepromSize);
+	#else
+		EEPROM.begin();
+	#endif
 	CDS::EEPROMBuffer* eepromBuffer = new CDS::EEPROMBuffer(0);
 	this->storageIterator = CDS::Iterator(eepromBuffer, eepromSize);
 	bool validDefaults = CDS::Element::valid(&storageIterator);
-	if (!validDefaults) {
+	if (true){//!validDefaults) {
 		for (size_t i = (size_t) 0; i < eepromSize; i++) {
 			uint8_t value =  pgm_read_byte(DEFAULTS + i);
 			EEPROM.write(i, value);
 		}
-		//EEPROM.commit();
+		#ifdef ESP8266
+			EEPROM.commit();
+		#endif
 	}
 	// TODO:: check version or structure
 	

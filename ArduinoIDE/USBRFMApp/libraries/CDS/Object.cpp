@@ -42,16 +42,19 @@ CDS::DataBuffer* CDS::Object::get(DataBuffer* object, const uint8_t* name) {
 	return element;
 }
 
-void CDS::Object::set(DataBuffer* object, const uint8_t* name, CDS::DataBuffer* value) {
+void CDS::Object::set(CDS::DataBuffer* object, const uint8_t* name, CDS::DataBuffer* value) {
+	CDS::DataBuffer* key = CDS::Element::newNumber();
+	CDS::Number::setChars(key, name);
+	CDS::Object::set(object, key, value);
+}
+
+void CDS::Object::set(CDS::DataBuffer* object, CDS::DataBuffer* key, CDS::DataBuffer* value) {
 	// TODO:: check for key existance !!!
 	// CDS::DataBuffer* saved = CDS::Object::get(object, name);
 	
 	CDS::DataBuffer* last = CDS::Element::last(value);
 	CDS::DataBuffer* prev = CDS::Element::last(object);
 	CDS::DataBuffer* next = prev->next;
-	
-	CDS::DataBuffer* key = CDS::Element::newNumber();
-	CDS::Number::setChars(key, name);
 	
 	key->prev = prev;
 	prev->next = key;
@@ -66,7 +69,7 @@ void CDS::Object::set(DataBuffer* object, const uint8_t* name, CDS::DataBuffer* 
 	CDS::Element::resize(object, (size_t) (size + 1));
 }
 
-
+/*
 CDS::Iterator CDS::Object::taketo(CDS::Iterator storage, const uint8_t* name) {
 	// TODO:: there is no check against CDS::OBJECT
 	uint8_t initial = storage.read();
@@ -84,6 +87,15 @@ CDS::Iterator CDS::Object::taketo(CDS::Iterator storage, const uint8_t* name) {
 	}
 	return storage;
 }
+*/
+
+CDS::Iterator CDS::Object::taketo(CDS::Iterator storage, const uint8_t* name) {
+	CDS::DataBuffer* key = CDS::Element::newNumber(name);
+	storage = CDS::Object::taketo(storage, key);
+	delete key;
+	return storage;
+}
+
 
 CDS::Iterator CDS::Object::taketo(CDS::Iterator storage, CDS::DataBuffer* key) {
 	// TODO:: there is no check against CDS::OBJECT

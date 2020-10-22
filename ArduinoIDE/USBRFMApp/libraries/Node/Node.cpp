@@ -51,7 +51,6 @@ void Node::applySettings() {
 
 void Node::save(CDS::DataBuffer* params, CDS::DataBuffer* response) {
 	this->from(params);
-	//this->saveFile();
 	this->applySettings();
 	yield();
 	this->state(params, response);
@@ -61,13 +60,11 @@ void Node::oncommand(CDS::DataBuffer* params, CDS::DataBuffer* response) {
 	size_t size = CDS::Element::size(params);
 	for (size_t i = (size_t) 0; i < size; i++) {
 		CDS::DataBuffer* key = CDS::Object::key(params, i);
-		//CD::KeyValue* savedKeyValue = params->keys[i];
 		if (NULL != key) {
 			if (NULL != key->next) {
 				bool isObject = CDS::Element::isObject(key->next);
 				if (isObject) {
 					CDS::DataBuffer* iparams = key->next;
-					//CDS::DataBuffer* key = savedKeyValue->key;
 					Node* implementer = this->nodes->get(key);
 					Method* method = this->methods->get(key);
 					if (NULL != implementer) {
@@ -78,7 +75,6 @@ void Node::oncommand(CDS::DataBuffer* params, CDS::DataBuffer* response) {
 				}
 			}
 		}
-
 	}
 }
 

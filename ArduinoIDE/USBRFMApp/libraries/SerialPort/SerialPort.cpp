@@ -10,7 +10,6 @@ SerialPort::~SerialPort() {
 }
 
 void SerialPort::setup() {
-	//this->readFile();
 	this->applySettings();
 }
 

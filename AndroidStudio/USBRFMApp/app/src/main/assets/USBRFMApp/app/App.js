@@ -104,7 +104,7 @@ App.prototype.onuserinput = function(text) {
 App.prototype.sent = function(params) {
 	let totalElement = params.get('total');
 	let total = totalElement.int();
-	console.log("total sent: " + total + " bytes");
+	this.parent.log(`TX ${total} bytes`);
 };
 
 /*
@@ -124,6 +124,7 @@ App.prototype.ondata = function(params) {
 		let rssi = rssiElement.int();
 		let snr = snrElement.float();
 		let pfe = pfeElement.int();
+		this.parent.log(`RX: ${ebuffer.length} bytes, RSSI: ${rssi}db, , PFE: ${pfe}, SNR: ${snr}`);
 		// ////////////////////////////////////////////////////////////////////////
 		
 		// //////////////////////////////////////////////////////////////
