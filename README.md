@@ -1,7 +1,7 @@
 # USB RFM App
 smartphone LoRa device connection - Android - USB - Arduino - LoRa
 
-Instructions on how to make it work can be found here https://www.hackster.io/pulsartronic/smartphone-lora-connection-bde258
+Instructions on how to make it work can be found here https://www.hackster.io/pulsartronic/smartphone-lora-connection-diy-bde258
 
 # Contribute
 An open source project is a forever Work In Progress. Feel free to be constructive.
