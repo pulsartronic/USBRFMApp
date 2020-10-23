@@ -10,6 +10,8 @@
 let App = function(parent, name) {
 	Node.call(this, parent, name);
 
+	// //////////////////////////////////////////////////////////////
+	// this is the HTML tag you can append children to
 	this.tag = document.createElement('div');
 	this.tag.className = 'App';
 	this.tag.node = this;
