@@ -23,7 +23,7 @@ uint8_t CDS::StaticBuffer::read(size_t index) {
 void CDS::StaticBuffer::write(size_t index, uint8_t* data, size_t size) {
 	// memcpy ??
 	for (size_t i = (size_t) 0; i < size; i++) {
-		this->data[index, i] = data[i];
+		this->data[index + i] = data[i];
 	}
 }
 
