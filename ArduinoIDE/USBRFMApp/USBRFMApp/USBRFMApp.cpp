@@ -24,7 +24,7 @@ void USBRFMApp::setup() {
 	CDS::EEPROMBuffer* eepromBuffer = new CDS::EEPROMBuffer(0);
 	this->storageIterator = CDS::Iterator(eepromBuffer, eepromSize);
 	bool validDefaults = CDS::Element::valid(&storageIterator);
-	if (true){//!validDefaults) {
+	if (!validDefaults) {
 		for (size_t i = (size_t) 0; i < eepromSize; i++) {
 			uint8_t value =  pgm_read_byte(DEFAULTS + i);
 			EEPROM.write(i, value);
